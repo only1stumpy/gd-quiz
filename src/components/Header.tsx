@@ -8,7 +8,7 @@ export default function Header() {
     <header className="relative bg-transparent py-[1rem] z-100">
       <div className="max-w-[1200px] mx-auto px-[2rem] flex justify-between items-center flex-col md:flex-row gap-1">
         <div className="font-[orbitron] text-2xl font-black bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] bg-clip-text text-transparent">
-          GDQuiz
+          <a href="/">GDQuiz</a>
         </div>
         <div className="flex items-center gap-2">
           <span className="opacity-70 mr-1">Language:</span>

@@ -10,54 +10,20 @@ import {
 import {
   SortableContext,
   arrayMove,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import BgWrapper from "@/components/BgWrapper"; // путь под себя
-
-type LevelData = {
-  id: number;
-  name: string;
-  video: string;
-  place: number;
-};
-
-function SortableLevel({ level, index }: { level: LevelData; index: number }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: level.id,
-    });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="bg-[var(--card-bg)] p-4 mb-4 rounded-xl border border-white/10 text-white backdrop-blur-lg cursor-move"
-    >
-      <div className="text-sm opacity-70 mb-1">#{index + 1}</div>
-      <p className="font-semibold mb-2">{level.name}</p>
-      <div className="aspect-video w-full rounded-md overflow-hidden border border-white/10">
-        <iframe
-          className="w-full h-full"
-          src={level.video.replace("watch?v=", "embed/")}
-          allowFullScreen
-        />
-      </div>
-    </div>
-  );
-}
+import BgWrapper from "@/components/BgWrapper";
+import { ILevelData } from "@/types/level";
+import SortableLevel from "@/components/SortableLevel";
+import Header from "@/components/Header";
+import getVideoId from "@/functions/getVideoId";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function QuizPage() {
-  const [levels, setLevels] = useState<LevelData[]>([]);
-
+  const { language } = useLanguage();
+  const [allLevels, setAllLevels] = useState<ILevelData[]>([]);
+  const [watchedLevels, setWatchedLevels] = useState<ILevelData[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
@@ -67,56 +33,111 @@ export default function QuizPage() {
       );
       const data = await res.json();
       const random10 = data.data.sort(() => 0.5 - Math.random()).slice(0, 10);
-      setLevels(random10);
+      setAllLevels(random10);
     };
     fetchLevels();
   }, []);
 
+  const handleNext = () => {
+    const current = allLevels[currentIndex];
+    setWatchedLevels((prev) => [...prev, current]);
+    setCurrentIndex((prev) => prev + 1);
+  };
+
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      const oldIndex = levels.findIndex((lvl) => lvl.id === active.id);
-      const newIndex = levels.findIndex((lvl) => lvl.id === over.id);
-      setLevels((items) => arrayMove(items, oldIndex, newIndex));
+      const oldIndex = watchedLevels.findIndex((lvl) => lvl.id === active.id);
+      const newIndex = watchedLevels.findIndex((lvl) => lvl.id === over.id);
+      setWatchedLevels((items) => arrayMove(items, oldIndex, newIndex));
     }
   };
 
   const handleSubmit = () => {
-    localStorage.setItem("gdquiz_levels", JSON.stringify(levels));
+    localStorage.setItem("gdquiz_levels", JSON.stringify(watchedLevels));
   };
+
+  const currentLevel = allLevels[currentIndex];
+  const videoId = currentLevel ? getVideoId(currentLevel.video) : null;
 
   return (
     <>
       <BgWrapper />
+      <Header />
       <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Перетащи уровни по сложности
+        <h1 className="text-5xl font-bold text-center mb-4 font-[orbitron]">
+          {language === "en" ? "View levels" : "Просмотр уровней"}
         </h1>
-        <p className="text-center text-sm text-gray-400 mb-6">
-          Сверху — самый сложный, снизу — самый лёгкий
-        </p>
+        {currentLevel ? (
+          <div className="mb-8">
+            <p className="text-center font-semibold mb-2">
+              {language === "en" ? "Level " : "Уровень "}
+              {currentIndex + 1} / 10 — {currentLevel.name}
+            </p>
+            <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10">
+              <iframe
+                src={`https://www.youtube.com/embed/${videoId}`}
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+            <div className="text-center mt-6">
+              <button
+                onClick={handleNext}
+                className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
+              >
+                {currentIndex < 9
+                  ? language === "en"
+                    ? "Next level"
+                    : "Следующий уровень"
+                  : language === "en"
+                  ? "Go to top"
+                  : "Перейти к топу"}
+              </button>
+            </div>
+          </div>
+        ) : null}
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={levels.map((lvl) => lvl.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {levels.map((level, index) => (
-              <SortableLevel key={level.id} level={level} index={index} />
-            ))}
-          </SortableContext>
-        </DndContext>
+        {watchedLevels.length > 0 && (
+          <>
+            <h2 className="text-xl font-semibold text-center mb-2">
+              {language === "en" ? "Your current top" : "Твой текущий топ"}
+            </h2>
+            <p className="text-center text-sm text-gray-400 mb-4">
+              {language === "en"
+                ? "Drag the levels. At the top - hardest."
+                : "Перетаскивай уровни. Сверху — самый сложный."}
+            </p>
 
-        <button
-          onClick={handleSubmit}
-          className="mt-6 px-8 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-[var(--neon-blue)] to-[var(--neon-purple)] hover:shadow-xl transition block mx-auto"
-        >
-          <a href="/result">Отправить топ</a>
-        </button>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={watchedLevels.map((lvl) => lvl.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {watchedLevels.map((level, index) => (
+                  <SortableLevel key={level.id} level={level} index={index} />
+                ))}
+              </SortableContext>
+            </DndContext>
+          </>
+        )}
+
+        {watchedLevels.length === 10 && (
+          <div className="text-center mt-8">
+            <button
+              onClick={handleSubmit}
+              className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
+            >
+              <a href="/result">
+                {language === "en" ? "Submit top" : "Отправить топ"}
+              </a>
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

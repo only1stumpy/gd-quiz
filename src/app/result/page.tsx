@@ -2,17 +2,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BgWrapper from "@/components/BgWrapper";
-
-type LevelData = {
-  id: number;
-  name: string;
-  video: string;
-  place: number;
-};
+import { ILevelData } from "@/types/level";
+import Header from "@/components/Header";
+import getVideoId from "@/functions/getVideoId";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ResultPage() {
-  const [userTop, setUserTop] = useState<LevelData[]>([]);
-  const [correctOrder, setCorrectOrder] = useState<LevelData[]>([]);
+  const { language } = useLanguage();
+  const [userTop, setUserTop] = useState<ILevelData[]>([]);
+  const [correctOrder, setCorrectOrder] = useState<ILevelData[]>([]);
   const [totalError, setTotalError] = useState(0);
   const router = useRouter();
 
@@ -20,7 +18,7 @@ export default function ResultPage() {
     const stored = localStorage.getItem("gdquiz_levels");
     if (!stored) return;
 
-    const parsed: LevelData[] = JSON.parse(stored);
+    const parsed: ILevelData[] = JSON.parse(stored);
     setUserTop(parsed);
 
     const sorted = [...parsed].sort((a, b) => a.place - b.place);
@@ -33,20 +31,15 @@ export default function ResultPage() {
     setTotalError(errorSum);
   }, []);
 
-  const getCardColor = (level: LevelData, index: number): string => {
+  const getCardColor = (level: ILevelData, index: number): string => {
     const correctIndex = correctOrder.findIndex((l) => l.id === level.id);
     if (correctIndex === -1) return "bg-gray-700";
-    return correctIndex === index ? "bg-green-700/50" : "bg-red-700/50";
+    return correctIndex === index ? "bg-green-700/30" : "bg-red-700/30";
   };
 
-  const getRelativePlace = (level: LevelData): number => {
+  const getRelativePlace = (level: ILevelData): number => {
     const sorted = [...userTop].sort((a, b) => a.place - b.place);
     return sorted.findIndex((l) => l.id === level.id) + 1;
-  };
-
-  const getYoutubePreview = (url: string): string => {
-    const match = url.match(/(?:v=|\/embed\/)([a-zA-Z0-9_-]{11})/);
-    return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : "";
   };
 
   const restart = () => {
@@ -57,6 +50,7 @@ export default function ResultPage() {
   return (
     <>
       <BgWrapper />
+      <Header />
       <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white">
         <h1 className="text-3xl font-bold text-center mb-4">Результаты</h1>
         <p className="text-center text-sm text-gray-400 mb-2">
@@ -85,7 +79,9 @@ export default function ResultPage() {
               </div>
               <p className="font-semibold mb-2">{level.name}</p>
               <img
-                src={getYoutubePreview(level.video)}
+                src={`https://img.youtube.com/vi/${getVideoId(
+                  level.video
+                )}/hqdefault.jpg`}
                 alt={level.name}
                 className="w-full aspect-video object-cover rounded-md border border-white/10"
               />
@@ -96,7 +92,7 @@ export default function ResultPage() {
         <div className="text-center mt-10">
           <button
             onClick={restart}
-            className="px-8 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-[var(--neon-blue)] to-[var(--neon-purple)] hover:shadow-xl transition"
+            className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
           >
             Сыграть ещё раз
           </button>
