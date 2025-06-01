@@ -25,15 +25,14 @@ export default function Home() {
 
           <p className="text-xl mb-12 opacity-80 animate-[slideUp_1s_ease-out_1s_both]">
             {language === "en"
-              ? "Think you know Geometry Dash? Test your skills by ranking the hardest levels from easiest to most impossible. Can you beat the ultimate difficulty challenge?"
-              : "Думаете, что знаете Geometry Dash? Проверьте свои навыки, ранжируя сложнейшие уровни от самого легкого до самого невозможного. Сможете ли вы пройти испытание сложности?"}
+              ? "Think you know Geometry Dash? Test your skills by ranking the hardest levels from most impossible to easiest. Can you beat the ultimate difficulty challenge?"
+              : "Думаете, что знаете Geometry Dash? Проверьте свои навыки, ранжируя сложнейшие уровни от самого невозможного до самого легкого. Сможете ли вы пройти испытание сложности?"}
           </p>
-
-          <button className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full">
-            <a href="/quiz">
+          <a href="/quiz">
+            <button className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full">
               {language === "en" ? "Start Challenge" : "Начать испытание"}
-            </a>
-          </button>
+            </button>
+          </a>
         </div>
       </section>
 
@@ -60,7 +59,6 @@ export default function Home() {
               ∞
             </span>
             <p className="text-base opacity-80 mt-4">
-              {" "}
               {language === "en" ? "Attempts" : "Попыток"}
             </p>
           </div>

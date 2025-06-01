@@ -52,12 +52,16 @@ export default function ResultPage() {
       <BgWrapper />
       <Header />
       <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white">
-        <h1 className="text-3xl font-bold text-center mb-4">Результаты</h1>
+        <h1 className="text-3xl font-bold text-center mb-4">
+          {language === "en" ? "Results" : "Результаты"}
+        </h1>
         <p className="text-center text-sm text-gray-400 mb-2">
-          Зелёное — правильно, красное — ошибка
+          {language === "en"
+            ? "Green is correct, red is wrong"
+            : "Зелёное — правильно, красное — ошибка"}
         </p>
         <p className="text-center text-sm text-[var(--neon-green)] mb-6">
-          Сумма ошибок: {totalError}
+          {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {totalError}
         </p>
 
         <ol className="space-y-4">
@@ -71,13 +75,25 @@ export default function ResultPage() {
             >
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm text-gray-300">
-                  #{index + 1} в твоём топе
+                  #{index + 1}{" "}
+                  {language === "en" ? "in your top" : "в твоём топе"}
                 </div>
                 <div className="text-sm text-white/80">
-                  Реальное место среди этих 10: {getRelativePlace(level)}
+                  {language === "en"
+                    ? "Real place among these 10"
+                    : "Реальное место среди этих 10"}
+                  : {getRelativePlace(level)}
                 </div>
               </div>
-              <p className="font-semibold mb-2">{level.name}</p>
+              <div className="flex justify-between items-center mb-2">
+                <p className="font-semibold mb-2">{level.name}</p>
+                <div className="text-sm text-white/80">
+                  {language === "en"
+                    ? "Placement in global gemon list"
+                    : "Место в глобале"}
+                  : {level.place}
+                </div>
+              </div>
               <img
                 src={`https://img.youtube.com/vi/${getVideoId(
                   level.video
@@ -94,7 +110,7 @@ export default function ResultPage() {
             onClick={restart}
             className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
           >
-            Сыграть ещё раз
+            {language === "en" ? "Play again" : "Сыграть ещё раз"}
           </button>
         </div>
       </div>
