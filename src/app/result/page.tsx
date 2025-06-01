@@ -61,7 +61,11 @@ export default function ResultPage() {
             : "Зелёное — правильно, красное — ошибка"}
         </p>
         <p className="text-center text-sm text-[var(--neon-green)] mb-6">
-          {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {totalError}
+          {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {totalError} (
+          {language === "en"
+            ? "Dont look at this its still bugged"
+            : "Это лаганная хуйня, не смотри на это"}
+          )
         </p>
 
         <ol className="space-y-4">
