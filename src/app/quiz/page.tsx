@@ -19,24 +19,131 @@ import Header from "@/components/Header";
 import getVideoId from "@/functions/getVideoId";
 import { useLanguage } from "@/context/LanguageContext";
 
+// Кэш для уже проверенных видео
+const embedCache = new Map<string, boolean>();
+
+const checkEmbedAvailability = async (videoUrl: string): Promise<boolean> => {
+  const videoId = getVideoId(videoUrl);
+  if (!videoId) return false;
+
+  if (embedCache.has(videoId)) {
+    return embedCache.get(videoId)!;
+  }
+
+  try {
+    // 1. Проверяем через oembed
+    const oembedResponse = await fetch(
+      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}`
+    );
+
+    if (!oembedResponse.ok) {
+      embedCache.set(videoId, false);
+      return false;
+    }
+
+    // 2. Дополнительная проверка - пытаемся создать iframe
+    return await new Promise((resolve) => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${videoId}`;
+      iframe.style.display = "none";
+
+      iframe.onload = () => {
+        document.body.removeChild(iframe);
+        embedCache.set(videoId, true);
+        resolve(true);
+      };
+
+      iframe.onerror = () => {
+        document.body.removeChild(iframe);
+        embedCache.set(videoId, false);
+        resolve(false);
+      };
+
+      document.body.appendChild(iframe);
+    });
+  } catch {
+    embedCache.set(videoId, false);
+    return false;
+  }
+};
+
+// Функция для параллельной проверки видео
+const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
+  const embeddableLevels: ILevelData[] = [];
+  const levelsToCheck = [...levels];
+
+  while (levelsToCheck.length > 0 && embeddableLevels.length < 10) {
+    const batch = levelsToCheck.splice(0, maxParallel);
+    const results = await Promise.all(
+      batch.map((level) => checkEmbedAvailability(level.video))
+    );
+
+    results.forEach((isEmbeddable, index) => {
+      if (isEmbeddable) {
+        embeddableLevels.push(batch[index]);
+      }
+    });
+  }
+
+  return embeddableLevels;
+};
+
 export default function QuizPage() {
   const { language } = useLanguage();
   const [allLevels, setAllLevels] = useState<ILevelData[]>([]);
   const [watchedLevels, setWatchedLevels] = useState<ILevelData[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     const fetchLevels = async () => {
-      const res = await fetch(
-        "https://cors-anywhere.herokuapp.com/https://api.demonlist.org/levels/classic"
-      );
-      const data = await res.json();
-      const random10 = data.data.sort(() => 0.5 - Math.random()).slice(0, 10);
-      setAllLevels(random10);
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const apiUrl = "https://api.demonlist.org/levels/classic";
+        const proxyUrl = `/api/proxy?url=${encodeURIComponent(apiUrl)}`;
+
+        const response = await fetch(proxyUrl);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+
+        const result = await response.json();
+        if (!result.success || !Array.isArray(result.data)) {
+          throw new Error("Invalid data format");
+        }
+        const levelsWithVideo = result.data.filter(
+          (level: { video: any }) => level.video
+        );
+        if (levelsWithVideo.length < 10) {
+          throw new Error(
+            language === "en"
+              ? "Not enough levels with videos found"
+              : "Недостаточно уровней с видео"
+          );
+        }
+        const levelsToCheck = levelsWithVideo
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 25);
+
+        const embeddableLevels = await checkVideosParallel(levelsToCheck);
+
+        const shuffled = [...embeddableLevels].sort(() => 0.5 - Math.random());
+        const random10 = shuffled.slice(0, 10);
+
+        setAllLevels(random10);
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setError(error instanceof Error ? error.message : "Unknown error");
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     fetchLevels();
-  }, []);
+  }, [language]);
 
   const handleNext = () => {
     const current = allLevels[currentIndex];
@@ -68,11 +175,19 @@ export default function QuizPage() {
         <h1 className="text-5xl font-bold text-center mb-4 font-[orbitron]">
           {language === "en" ? "View levels" : "Просмотр уровней"}
         </h1>
-        {currentLevel ? (
+        {isLoading ? (
+          <div className="space-y-6 animate-pulse">
+            <div className="h-6 bg-gray-700 rounded w-3/4 mx-auto"></div>
+            <div className="aspect-video w-full rounded-lg bg-gray-800"></div>
+            <div className="h-16 bg-gray-700 rounded-[50px] w-64 mx-auto"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center text-red-400 py-8">{error}</div>
+        ) : currentLevel ? (
           <div className="mb-8">
             <p className="text-center font-semibold mb-2">
               {language === "en" ? "Level " : "Уровень "}
-              {currentIndex + 1} / 10 — {currentLevel.name}
+              {currentIndex + 1} / {allLevels.length} — {currentLevel.name}
             </p>
             <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10">
               <iframe
