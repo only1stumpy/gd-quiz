@@ -7,12 +7,38 @@ export default function Footer() {
       {language === "en" ? (
         <p>
           Created with ❤️ by <a href="https://t.me/only1stumpy">only1stumpy</a>©
-          2025 | Ready to prove your GD knowledge?
+          2025 | If you find any bugs, dm me on{" "}
+          <a
+            href="https://t.me/only1stumpy"
+            className="text-blue-300 underline cursor-pointer"
+          >
+            Telegram
+          </a>{" "}
+          or{" "}
+          <a
+            href="discord://discord.com/users/566557479127875602"
+            className="text-blue-300 underline cursor-pointer"
+          >
+            Discord
+          </a>
         </p>
       ) : (
         <p>
           Создано с ❤️ <a href="https://t.me/only1stumpy">only1stumpy</a> © 2025
-          | Готовы доказать свои знания GD?
+          | Если найдешь баг, пиши в{" "}
+          <a
+            href="https://t.me/only1stumpy"
+            className="text-blue-300 underline cursor-pointer"
+          >
+            Telegram
+          </a>{" "}
+          или в{" "}
+          <a
+            href="discord://discord.com/users/566557479127875602"
+            className="text-blue-300 underline cursor-pointer"
+          >
+            Discord
+          </a>
         </p>
       )}
     </footer>

@@ -6,12 +6,16 @@ import { ILevelData } from "@/types/level";
 import Header from "@/components/Header";
 import getVideoId from "@/functions/getVideoId";
 import { useLanguage } from "@/context/LanguageContext";
+import Footer from "@/components/Footer";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export default function ResultPage() {
   const { language } = useLanguage();
+  useScrollReveal();
   const [userTop, setUserTop] = useState<ILevelData[]>([]);
   const [correctOrder, setCorrectOrder] = useState<ILevelData[]>([]);
-  const [totalError, setTotalError] = useState(0);
+  const [mistakeCount, setMistakeCount] = useState(0);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -21,14 +25,19 @@ export default function ResultPage() {
     const parsed: ILevelData[] = JSON.parse(stored);
     setUserTop(parsed);
 
-    const sorted = [...parsed].sort((a, b) => a.place - b.place);
-    setCorrectOrder(sorted);
+    const correct = [...parsed].sort((a, b) => a.place - b.place);
+    setCorrectOrder(correct);
 
-    const errorSum = parsed.reduce((sum, level, i) => {
-      const correctIndex = sorted.findIndex((l) => l.id === level.id);
-      return sum + Math.abs(correctIndex - i);
-    }, 0);
-    setTotalError(errorSum);
+    let mistakeCount = 0;
+
+    parsed.forEach((level, i) => {
+      const correctIndex = correct.findIndex((l) => l.id === level.id);
+      if (correctIndex !== i) {
+        mistakeCount++;
+      }
+    });
+
+    setMistakeCount(mistakeCount); // <— добавь useState для этого
   }, []);
 
   const getCardColor = (level: ILevelData, index: number): string => {
@@ -61,11 +70,7 @@ export default function ResultPage() {
             : "Зелёное — правильно, красное — ошибка"}
         </p>
         <p className="text-center text-sm text-[var(--neon-green)] mb-6">
-          {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {totalError} (
-          {language === "en"
-            ? "Dont look at this its still bugged"
-            : "Это лаганная хуйня, не смотри на это"}
-          )
+          {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {mistakeCount}{" "}
         </p>
 
         <ol className="space-y-4">
@@ -118,6 +123,7 @@ export default function ResultPage() {
           </button>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

@@ -18,6 +18,8 @@ import SortableLevel from "@/components/SortableLevel";
 import Header from "@/components/Header";
 import getVideoId from "@/functions/getVideoId";
 import { useLanguage } from "@/context/LanguageContext";
+import Footer from "@/components/Footer";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // Кэш для уже проверенных видео
 const embedCache = new Map<string, boolean>();
@@ -90,6 +92,7 @@ const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
 
 export default function QuizPage() {
   const { language } = useLanguage();
+  useScrollReveal();
   const [allLevels, setAllLevels] = useState<ILevelData[]>([]);
   const [watchedLevels, setWatchedLevels] = useState<ILevelData[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -126,7 +129,7 @@ export default function QuizPage() {
         }
         const levelsToCheck = levelsWithVideo
           .sort(() => 0.5 - Math.random())
-          .slice(0, 25);
+          .slice(0, 19);
 
         const embeddableLevels = await checkVideosParallel(levelsToCheck);
 
@@ -177,6 +180,11 @@ export default function QuizPage() {
         </h1>
         {isLoading ? (
           <div className="space-y-6 animate-pulse">
+            <h1 className="text-3xl font-bold text-center mb-4">
+              {language === "en"
+                ? "Getting the list of levels... Just wait..."
+                : "Получаем список уровней... Просто подожди..."}
+            </h1>
             <div className="h-6 bg-gray-700 rounded w-3/4 mx-auto"></div>
             <div className="aspect-video w-full rounded-lg bg-gray-800"></div>
             <div className="h-16 bg-gray-700 rounded-[50px] w-64 mx-auto"></div>
@@ -254,6 +262,7 @@ export default function QuizPage() {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }
