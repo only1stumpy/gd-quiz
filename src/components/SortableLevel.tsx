@@ -17,7 +17,6 @@ export default function SortableLevel({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: level.id,
-      // Removed the unsupported 'handle' property
     });
 
   const [expanded, setExpanded] = useState(false);

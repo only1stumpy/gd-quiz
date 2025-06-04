@@ -37,7 +37,7 @@ export default function ResultPage() {
       }
     });
 
-    setMistakeCount(mistakeCount); // <— добавь useState для этого
+    setMistakeCount(mistakeCount);
   }, []);
 
   const getCardColor = (level: ILevelData, index: number): string => {

@@ -6,6 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  TouchSensor,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -21,7 +22,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import Footer from "@/components/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-// Кэш для уже проверенных видео
 const embedCache = new Map<string, boolean>();
 
 const checkEmbedAvailability = async (videoUrl: string): Promise<boolean> => {
@@ -33,7 +33,6 @@ const checkEmbedAvailability = async (videoUrl: string): Promise<boolean> => {
   }
 
   try {
-    // 1. Проверяем через oembed
     const oembedResponse = await fetch(
       `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}`
     );
@@ -43,7 +42,6 @@ const checkEmbedAvailability = async (videoUrl: string): Promise<boolean> => {
       return false;
     }
 
-    // 2. Дополнительная проверка - пытаемся создать iframe
     return await new Promise((resolve) => {
       const iframe = document.createElement("iframe");
       iframe.src = `https://www.youtube.com/embed/${videoId}`;
@@ -69,7 +67,6 @@ const checkEmbedAvailability = async (videoUrl: string): Promise<boolean> => {
   }
 };
 
-// Функция для параллельной проверки видео
 const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
   const embeddableLevels: ILevelData[] = [];
   const levelsToCheck = [...levels];
@@ -98,7 +95,16 @@ export default function QuizPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      // Опции для лучшей работы на тач-устройствах
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
 
   useEffect(() => {
     const fetchLevels = async () => {
