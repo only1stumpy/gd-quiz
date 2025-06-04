@@ -111,3 +111,16 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+[data-draggable] {
+  touch-action: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Увеличиваем область касания на мобильных */
+@media (max-width: 768px) {
+  [data-dnd-kit-drag-handle] {
+    padding: 16px;
+    margin: -8px;
+  }
+}

@@ -50,6 +50,10 @@ export default function SortableLevel({
         {...attributes}
         {...listeners}
         data-dnd-kit-drag-handle
+        onTouchStart={(e) => e.preventDefault()}
+        style={{
+          touchAction: "none",
+        }}
       >
         <div className="flex justify-between w-full">
           <p>#{index + 1}</p>
