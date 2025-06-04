@@ -4,6 +4,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useLanguage } from "@/context/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function Home() {
   const { language } = useLanguage();
@@ -12,6 +13,7 @@ export default function Home() {
     <div>
       <BgWrapper />
       <Header />
+      <Analytics />
 
       <section className="min-h-screen flex items-center justify-center relative p-4 md:p-8 ">
         <div className="text-center max-w-[800px] z-10">
