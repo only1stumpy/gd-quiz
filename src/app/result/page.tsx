@@ -64,10 +64,47 @@ export default function ResultPage() {
         <h1 className="text-3xl font-bold text-center mb-4">
           {language === "en" ? "Results" : "Результаты"}
         </h1>
+
+        {language === "en" ? (
+          <p className="text-center text-xl text-gray-400 mb-2">
+            Thank you for playing! Join our{" "}
+            <a
+              href="https://discord.gg/H4EU4KvSkR"
+              className="text-blue-300 underline cursor-pointer"
+            >
+              Discord server
+            </a>{" "}
+            or{" "}
+            <a
+              href="https://t.me/only1stumpyy"
+              className="text-blue-300 underline cursor-pointer"
+            >
+              Telegram
+            </a>
+          </p>
+        ) : (
+          <p className="text-center text-xl text-gray-400 mb-2">
+            Спасибо за игру! Встуай в наш{" "}
+            <a
+              href="https://discord.gg/H4EU4KvSkR"
+              className="text-blue-300 underline cursor-pointer"
+            >
+              Discord сервер
+            </a>{" "}
+            или в{" "}
+            <a
+              href="https://t.me/only1stumpyy"
+              className="text-blue-300 underline cursor-pointer"
+            >
+              Telegram
+            </a>
+          </p>
+        )}
+
         <p className="text-center text-sm text-gray-400 mb-2">
           {language === "en"
-            ? "Green is correct, red is wrong"
-            : "Зелёное — правильно, красное — ошибка"}
+            ? "Here are your results, green is correct, red is wrong"
+            : "Вот результаты квиза, зелёное — правильно, красное — ошибка"}
         </p>
         <p className="text-center text-sm text-[var(--neon-green)] mb-6">
           {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {mistakeCount}{" "}
@@ -98,7 +135,7 @@ export default function ResultPage() {
                 <p className="font-semibold mb-2">{level.name}</p>
                 <div className="text-sm text-white/80">
                   {language === "en"
-                    ? "Placement in global gemon list"
+                    ? "Placement in global demon list"
                     : "Место в глобале"}
                   : {level.place}
                 </div>

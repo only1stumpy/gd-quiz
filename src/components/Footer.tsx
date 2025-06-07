@@ -16,7 +16,7 @@ export default function Footer() {
           </a>{" "}
           or{" "}
           <a
-            href="discord://discord.com/users/566557479127875602"
+            href="https://discord.gg/H4EU4KvSkR"
             className="text-blue-300 underline cursor-pointer"
           >
             Discord
@@ -34,7 +34,7 @@ export default function Footer() {
           </a>{" "}
           или в{" "}
           <a
-            href="discord://discord.com/users/566557479127875602"
+            href="https://discord.gg/H4EU4KvSkR"
             className="text-blue-300 underline cursor-pointer"
           >
             Discord
