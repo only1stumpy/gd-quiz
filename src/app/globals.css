@@ -9,6 +9,7 @@
   --card-bg: rgba(255, 255, 255, 0.05);
   --font-inter: "Inter", sans-serif;
   --font-orbitron: "Orbitron", monospace;
+  --font-russo-one: "Russo One", sans-serif;
   --card-border: rgba(255, 255, 255, 0.1);
 }
 @theme {

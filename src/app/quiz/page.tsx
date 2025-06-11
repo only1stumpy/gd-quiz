@@ -21,6 +21,7 @@ import getVideoId from "@/functions/getVideoId";
 import { useLanguage } from "@/context/LanguageContext";
 import Footer from "@/components/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import HowToPlay from "@/components/HowToPlay";
 
 const embedCache = new Map<string, boolean>();
 
@@ -94,11 +95,11 @@ export default function QuizPage() {
   const [watchedLevels, setWatchedLevels] = useState<ILevelData[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showHowToPlay, setShowHowToPlay] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(TouchSensor, {
-      // Опции для лучшей работы на тач-устройствах
       activationConstraint: {
         delay: 250,
         tolerance: 5,
@@ -180,8 +181,21 @@ export default function QuizPage() {
     <>
       <BgWrapper />
       <Header />
-      <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white">
-        <h1 className="text-5xl font-bold text-center mb-4 font-[orbitron]">
+      {showHowToPlay && (
+        <HowToPlay
+          isFirstVisit={watchedLevels.length === 0}
+          onClose={() => setShowHowToPlay(false)}
+        />
+      )}
+
+      <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative">
+        <button
+          onClick={() => setShowHowToPlay(true)}
+          className="text-sm text-[var(--neon-blue)] hover:underline cursor-pointer absolute top-10 right-4 font-semibold border border-[var(--neon-blue)] rounded-full px-3 py-1 transition duration-300 ease-linear hover:bg-[var(--neon-blue)] hover:text-white shadow-[0_0_10px_rgba(0,255,255,0.5)] z-10 hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] animate-[fadeIn_1s_ease-out_1s_both]"
+        >
+          i
+        </button>
+        <h1 className="text-5xl text-center mb-4 font-[Russo_One] ">
           {language === "en" ? "View levels" : "Просмотр уровней"}
         </h1>
         {isLoading ? (

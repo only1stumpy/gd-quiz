@@ -84,7 +84,7 @@ export default function ResultPage() {
           </p>
         ) : (
           <p className="text-center text-xl text-gray-400 mb-2">
-            Спасибо за игру! Встуай в наш{" "}
+            Спасибо за игру! Вступай в наш{" "}
             <a
               href="https://discord.gg/H4EU4KvSkR"
               className="text-blue-300 underline cursor-pointer"
