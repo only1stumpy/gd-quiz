@@ -106,7 +106,7 @@ export default function ResultPage() {
             ? "Here are your results, green is correct, red is wrong"
             : "Вот результаты квиза, зелёное — правильно, красное — ошибка"}
         </p>
-        <p className="text-center text-sm text-red-700/70 mb-6">
+        <p className="text-center text-sm text-red-600 mb-6">
           {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {mistakeCount}{" "}
         </p>
 
