@@ -23,71 +23,6 @@ import Footer from "@/components/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import HowToPlay from "@/components/HowToPlay";
 
-const embedCache = new Map<string, boolean>();
-
-const checkEmbedAvailability = async (videoUrl: string): Promise<boolean> => {
-  const videoId = getVideoId(videoUrl);
-  if (!videoId) return false;
-
-  if (embedCache.has(videoId)) {
-    return embedCache.get(videoId)!;
-  }
-
-  try {
-    const oembedResponse = await fetch(
-      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}`
-    );
-
-    if (!oembedResponse.ok) {
-      embedCache.set(videoId, false);
-      return false;
-    }
-
-    return await new Promise((resolve) => {
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube.com/embed/${videoId}`;
-      iframe.style.display = "none";
-
-      iframe.onload = () => {
-        document.body.removeChild(iframe);
-        embedCache.set(videoId, true);
-        resolve(true);
-      };
-
-      iframe.onerror = () => {
-        document.body.removeChild(iframe);
-        embedCache.set(videoId, false);
-        resolve(false);
-      };
-
-      document.body.appendChild(iframe);
-    });
-  } catch {
-    embedCache.set(videoId, false);
-    return false;
-  }
-};
-
-const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
-  const embeddableLevels: ILevelData[] = [];
-  const levelsToCheck = [...levels];
-
-  while (levelsToCheck.length > 0 && embeddableLevels.length < 10) {
-    const batch = levelsToCheck.splice(0, maxParallel);
-    const results = await Promise.all(
-      batch.map((level) => checkEmbedAvailability(level.video))
-    );
-
-    results.forEach((isEmbeddable, index) => {
-      if (isEmbeddable) {
-        embeddableLevels.push(batch[index]);
-      }
-    });
-  }
-
-  return embeddableLevels;
-};
-
 export default function QuizPage() {
   const { language } = useLanguage();
   useScrollReveal();
@@ -113,34 +48,17 @@ export default function QuizPage() {
         setIsLoading(true);
         setError(null);
 
-        const apiUrl = "https://api.demonlist.org/levels/classic";
-        const proxyUrl = `/api/proxy?url=${encodeURIComponent(apiUrl)}`;
-
-        const response = await fetch(proxyUrl);
+        const response = await fetch(
+          "https://gd-quiz-api.vercel.app/api/levels"
+        );
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const result = await response.json();
-        if (!result.success || !Array.isArray(result.data)) {
-          throw new Error("Invalid data format");
-        }
-        const levelsWithVideo = result.data.filter(
-          (level: { video: any }) => level.video
-        );
-        if (levelsWithVideo.length < 10) {
-          throw new Error(
-            language === "en"
-              ? "Not enough levels with videos found"
-              : "Недостаточно уровней с видео"
-          );
-        }
-        const levelsToCheck = levelsWithVideo
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 19);
 
-        const embeddableLevels = await checkVideosParallel(levelsToCheck);
+        console.log("Fetched levels:", result);
 
-        const shuffled = [...embeddableLevels].sort(() => 0.5 - Math.random());
+        const shuffled = [...result.data].sort(() => 0.5 - Math.random());
         const random10 = shuffled.slice(0, 10);
 
         setAllLevels(random10);
@@ -153,7 +71,7 @@ export default function QuizPage() {
     };
 
     fetchLevels();
-  }, [language]);
+  }, []);
 
   const handleNext = () => {
     const current = allLevels[currentIndex];
