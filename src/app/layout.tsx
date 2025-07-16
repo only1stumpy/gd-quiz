@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     "Test your skills by ranking the hardest levels from most impossible to easiest",
   keywords:
     "gd, geometry dash, quiz, game, levels, impossible, hardest, easiest, demonlist, demon list, global demonlist, global demon list, hardest levels, hardest levels in geometry dash, hardest levels in gd, hardest levels in geometry dash, hardest levels in gd, impossible levels, impossible levels in geometry dash, impossible levels in gd, demon list quiz, global demon list quiz, global demonlist quiz, demonlist quiz, geometry dash quiz, gd quiz, demonlist challenge, global demonlist challenge, demon list challenge, geometry dash challenge, gd challenge, quiz challenge, hardest levels challenge, impossible levels challenge, impossible levels in geometry dash challenge, impossible levels in gd challenge, hardest levels in geometry dash challenge, hardest levels in gd challenge",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
