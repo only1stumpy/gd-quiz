@@ -13,23 +13,24 @@ const Quiz = () => {
   const allLevels = useAllLevelsStore((state) => state.allLevels);
   useScrollReveal();
   const router = useRouter();
+  const fetchLevels = async () => {
+    const response = await fetch("/api/levels");
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
+    const result = await response.json();
+
+    useAllLevelsStore.getState().setAllLevels(result.data);
+  };
   useEffect(() => {
-    const fetchLevels = async () => {
-      const response = await fetch("/api/levels");
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-
-      const result = await response.json();
-
-      useAllLevelsStore.getState().setAllLevels(result.data);
-      console.log(allLevels);
-    };
-
     if (allLevels.length === 0) {
       fetchLevels();
     }
   }, []);
+  useEffect(() => {
+    if (allLevels.length === 0) {
+      fetchLevels();
+    }
+  }, [allLevels]);
   const storeLevels = async (mode: string) => {
     setIsLoading(true);
     const seed = nanoid(6);
@@ -66,7 +67,7 @@ const Quiz = () => {
           <h1 className="text-5xl font-bold mt-12 text-center">
             {language === "en" ? "Choose the difficulty" : "Выбери сложность"}
           </h1>
-          <div className="grid grid-cols-4 md:grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-8 mt-12 max-w-[75vw]">
+          <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] justify-center max-md: gap-8 mt-12 max-w-[75vw]">
             <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100">
               <p>
                 {language === "en" ? "Number of levels" : "Количество уровней"}:

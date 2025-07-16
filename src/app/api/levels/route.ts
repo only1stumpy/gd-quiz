@@ -55,7 +55,6 @@ export async function GET(request: Request) {
   const res = await fetch(apiUrl);
 
   const data = await res.json();
-  console.log(data);
   const levelsWithVideo = data.data.filter(
     (level: { video: any }) => level.video
   );
