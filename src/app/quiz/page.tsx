@@ -8,12 +8,10 @@ import { useRouter } from "next/navigation";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const Quiz = () => {
-  useScrollReveal();
-
   const [isLoading, setIsLoading] = useState(false);
   const language = useLanguageStore((state) => state.language);
   const allLevels = useAllLevelsStore((state) => state.allLevels);
-
+  useScrollReveal();
   const router = useRouter();
 
   useEffect(() => {
