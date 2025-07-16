@@ -149,11 +149,11 @@ export default function Mode() {
       <ToastContainer />
       {mode === "custom" && (
         <>
-          <h1 className="text-5xl text-center mb-4 font-[Russo_One]">
+          <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
             🎮 Custom Game
           </h1>
 
-          <div className="grid gap-4 w-full max-w-md">
+          <div className="grid gap-4 w-full max-w-md animate-[slideUp_1s_ease-out_1s_both]">
             <label className="flex flex-col">
               <span className="mb-1 text-sm text-gray-300">
                 {language === "en" ? "Number of levels" : "Количество уровней"}:
@@ -201,7 +201,7 @@ export default function Mode() {
       )}
       {mode === "friend" && (
         <>
-          <h1 className="text-5xl text-center mb-4 font-[Russo_One]">
+          <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
             🎮 Friend Game
           </h1>
 

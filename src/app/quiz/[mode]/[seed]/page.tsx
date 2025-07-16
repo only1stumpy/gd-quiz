@@ -83,18 +83,18 @@ export default function QuizPage() {
     <>
       {showHowToPlay && <HowToPlay onClose={() => setShowHowToPlay(false)} />}
 
-      <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative">
+      <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative animate-[slideUp_1s_ease-out_0.5s_both]">
         <button
           onClick={() => setShowHowToPlay(true)}
           className="text-sm text-[var(--neon-blue)] hover:underline cursor-pointer absolute top-10 right-4 font-semibold border border-[var(--neon-blue)] rounded-full px-3 py-1 transition duration-300 ease-linear hover:bg-[var(--neon-blue)] hover:text-white shadow-[0_0_10px_rgba(0,255,255,0.5)] z-10 hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] animate-[fadeIn_1s_ease-out_1s_both]"
         >
           i
         </button>
-        <h1 className="text-5xl text-center mb-4 font-[Russo_One] ">
+        <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
           {language === "en" ? "View levels" : "Просмотр уровней"}
         </h1>
         {currentLevel ? (
-          <div className="mb-8">
+          <div className="mb-8 animate-[slideUp_1s_ease-out_0.7s_both]">
             <p className="text-center font-semibold mb-2">
               {language === "en" ? "Level " : "Уровень "}
               {currentIndex + 1} / {selectedLevels.length} — {currentLevel.name}
@@ -124,7 +124,7 @@ export default function QuizPage() {
         ) : null}
 
         {watchedLevels.length > 0 && (
-          <>
+          <div className="animate-[slideUp_1s_ease-out_1s_both]">
             <h2 className="text-xl font-semibold text-center mb-2">
               {language === "en" ? "Your current top" : "Твой текущий топ"}
             </h2>
@@ -148,7 +148,7 @@ export default function QuizPage() {
                 ))}
               </SortableContext>
             </DndContext>
-          </>
+          </div>
         )}
 
         {watchedLevels.length === mode && (

@@ -64,11 +64,11 @@ const Quiz = () => {
         </div>
       ) : (
         <>
-          <h1 className="text-5xl font-bold mt-12 text-center">
+          <h1 className="text-5xl font-bold mt-12 text-center animate-[slideUp_1s_ease-out_0.5s_both]">
             {language === "en" ? "Choose the difficulty" : "Выбери сложность"}
           </h1>
           <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] justify-center max-md: gap-8 mt-12 max-w-[75vw]">
-            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100">
+            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100 animate-[slideUp_1s_ease-out_0.7s_both]">
               <p>
                 {language === "en" ? "Number of levels" : "Количество уровней"}:
                 5
@@ -83,7 +83,7 @@ const Quiz = () => {
                 {language === "en" ? "Easy" : "Легкий"}
               </button>
             </div>
-            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100">
+            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100 animate-[slideUp_1s_ease-out_0.9s_both]">
               <p>
                 {language === "en" ? "Number of levels" : "Количество уровней"}:
                 10
@@ -98,7 +98,7 @@ const Quiz = () => {
                 {language === "en" ? "Normal" : "Обычный"}
               </button>
             </div>
-            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100">
+            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100 animate-[slideUp_1s_ease-out_1.1s_both]">
               <p>
                 {language === "en" ? "Number of levels" : "Количество уровней"}:
                 10
@@ -115,7 +115,7 @@ const Quiz = () => {
                 {language === "en" ? "Hard" : "Сложный"}
               </button>
             </div>
-            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100">
+            <div className="bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-8 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100 animate-[slideUp_1s_ease-out_1.3s_both]">
               <p>
                 {language === "en" ? "Number of levels" : "Количество уровней"}:
                 custom
@@ -133,7 +133,7 @@ const Quiz = () => {
               </button>
             </div>
           </div>
-          <div className="bg-(--card-bg) rounded-3xl p-6 md:p-12 my-6 md:my-12 mx-4 md:mx-8 backdrop-blur-md border-1 border-(--card-border) max-w-[75vw]">
+          <div className="bg-(--card-bg) rounded-3xl p-6 md:p-12 my-6 md:my-12 mx-4 md:mx-8 backdrop-blur-md border-1 border-(--card-border) max-w-[75vw] animate-[slideUp_1s_ease-out_1.5s_both]">
             <div className="flex flex-col justify-center items-center gap-8 text-center">
               <h2 className="text-3xl font-bold mt-10 mb-4 text-center">
                 {language === "en"

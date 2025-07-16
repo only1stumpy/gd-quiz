@@ -56,12 +56,12 @@ export default function ResultPage() {
   return (
     <>
       <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white">
-        <h1 className="text-3xl font-bold text-center mb-4">
+        <h1 className="text-3xl font-bold text-center mb-4 animate-[slideUp_1s_ease-out_0.5s_both]">
           {language === "en" ? "Results" : "Результаты"}
         </h1>
 
         {language === "en" ? (
-          <p className="text-center text-xl text-gray-400 mb-2">
+          <p className="text-center text-xl text-gray-400 mb-2 animate-[slideUp_1s_ease-out_0.7s_both]">
             Thank you for playing! Join our{" "}
             <a
               href="https://discord.gg/H4EU4KvSkR"
@@ -78,7 +78,7 @@ export default function ResultPage() {
             </a>
           </p>
         ) : (
-          <p className="text-center text-xl text-gray-400 mb-2">
+          <p className="text-center text-xl text-gray-400 mb-2 animate-[slideUp_1s_ease-out_0.7s_both]">
             Спасибо за игру! Вступай в наш{" "}
             <a
               href="https://discord.gg/H4EU4KvSkR"
@@ -96,12 +96,12 @@ export default function ResultPage() {
           </p>
         )}
 
-        <p className="text-center text-sm text-gray-400 mb-2">
+        <p className="text-center text-sm text-gray-400 mb-2 animate-[slideUp_1s_ease-out_0.8s_both]">
           {language === "en"
             ? "Here are your results, green is correct, red is wrong"
             : "Вот результаты квиза, зелёное — правильно, красное — ошибка"}
         </p>
-        <p className="text-center text-sm text-red-600 mb-6">
+        <p className="text-center text-sm text-red-600 mb-6 animate-[slideUp_1s_ease-out_0.9s_both]">
           {language === "en" ? "Sum of errors" : "Сумма ошибок"}: {mistakeCount}{" "}
         </p>
 
@@ -112,7 +112,9 @@ export default function ResultPage() {
               className={`${getCardColor(
                 level,
                 index
-              )} p-4 rounded-xl border border-white/10 backdrop-blur`}
+              )} p-4 rounded-xl border border-white/10 backdrop-blur animate-[slideUp_1s_ease-out_1.${index}s_both] animate-[slideUp_1s_ease-out_1.${
+                index + 1
+              }s_both]`}
             >
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm text-gray-300">
