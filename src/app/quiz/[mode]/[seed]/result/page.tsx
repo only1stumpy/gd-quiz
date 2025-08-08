@@ -52,6 +52,7 @@ export default function ResultPage() {
     localStorage.removeItem("gdquiz_levels");
     router.push("/quiz");
   };
+  const numberOfLevels = userTop.length;
 
   return (
     <>
@@ -123,8 +124,8 @@ export default function ResultPage() {
                 </div>
                 <div className="text-sm text-white/80">
                   {language === "en"
-                    ? "Real place among these 10"
-                    : "Реальное место среди этих 10"}
+                    ? `Real place among these ${numberOfLevels}`
+                    : `Реальное место среди этих ${numberOfLevels}`}
                   : {getRelativePlace(level)}
                 </div>
               </div>

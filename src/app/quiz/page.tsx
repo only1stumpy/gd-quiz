@@ -6,6 +6,7 @@ import useQuizStore, { useAllLevelsStore } from "@/store/quizStore";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { toast } from "react-toastify";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,24 +14,51 @@ const Quiz = () => {
   const allLevels = useAllLevelsStore((state) => state.allLevels);
   useScrollReveal();
   const router = useRouter();
-  const fetchLevels = async () => {
-    const response = await fetch("/api/levels");
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  const fetchLevels = async (signal: AbortSignal) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/levels", { signal });
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const result = await response.json();
 
-    const result = await response.json();
-
-    useAllLevelsStore.getState().setAllLevels(result.data);
+      if (!signal.aborted && result?.data?.length) {
+        useAllLevelsStore.getState().setAllLevels(result.data);
+      }
+    } catch (err: any) {
+      if (err.name === "AbortError") {
+        return;
+      }
+      console.error("Failed to fetch levels:", err);
+      toast.error(
+        language === "en"
+          ? "Failed to fetch levels! Please reload page and try again."
+          : "Не удалось загрузить уровни! Пожалуйста, перезагрузите страницу и попробуйте снова.",
+        {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } finally {
+      if (!signal.aborted) setIsLoading(false);
+    }
   };
+
   useEffect(() => {
-    if (allLevels.length === 0) {
-      fetchLevels();
-    }
+    if (allLevels.length > 0) return;
+
+    const controller = new AbortController();
+    fetchLevels(controller.signal);
+
+    return () => {
+      controller.abort();
+    };
   }, []);
-  useEffect(() => {
-    if (allLevels.length === 0) {
-      fetchLevels();
-    }
-  }, [allLevels]);
   const storeLevels = async (mode: string) => {
     setIsLoading(true);
     const seed = nanoid(6);

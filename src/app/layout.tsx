@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BgWrapper from "@/components/BgWrapper";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       <body
         className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >
+        <SpeedInsights />
         <BgWrapper />
         <Header />
         <main>{children}</main>

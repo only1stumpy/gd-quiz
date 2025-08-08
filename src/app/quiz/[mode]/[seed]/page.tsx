@@ -28,6 +28,7 @@ export default function QuizPage() {
   const path = usePathname();
   const pathname = path.split("/")[2];
   const seed = path.split("/")[3];
+  const [error, setError] = useState(false);
   useEffect(() => {
     async function fetchFromDB() {
       const res = await fetch(`/api/seed/get?seed=${seed}&mode=${pathname}`);
@@ -38,13 +39,16 @@ export default function QuizPage() {
     }
 
     fetchFromDB();
+    if (useQuizStore.getState().selectedLevels.length === 0) {
+      setError(true);
+    }
   }, [seed, pathname]);
   const language = useLanguageStore((state) => state.language);
   useScrollReveal();
   const selectedLevels = useQuizStore((state) => state.selectedLevels);
   const [watchedLevels, setWatchedLevels] = useState<ILevelData[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showHowToPlay, setShowHowToPlay] = useState(true);
+  const [showHowToPlay, setShowHowToPlay] = useState<boolean | null>(null);
   let mode: number = selectedLevels.length;
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -81,87 +85,138 @@ export default function QuizPage() {
 
   return (
     <>
-      {showHowToPlay && <HowToPlay onClose={() => setShowHowToPlay(false)} />}
-
-      <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative animate-[slideUp_1s_ease-out_0.5s_both]">
-        <button
-          onClick={() => setShowHowToPlay(true)}
-          className="text-sm text-[var(--neon-blue)] hover:underline cursor-pointer absolute top-10 right-4 font-semibold border border-[var(--neon-blue)] rounded-full px-3 py-1 transition duration-300 ease-linear hover:bg-[var(--neon-blue)] hover:text-white shadow-[0_0_10px_rgba(0,255,255,0.5)] z-10 hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] animate-[fadeIn_1s_ease-out_1s_both]"
-        >
-          i
-        </button>
-        <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
-          {language === "en" ? "View levels" : "Просмотр уровней"}
-        </h1>
-        {currentLevel ? (
-          <div className="mb-8 animate-[slideUp_1s_ease-out_0.7s_both]">
-            <p className="text-center font-semibold mb-2">
-              {language === "en" ? "Level " : "Уровень "}
-              {currentIndex + 1} / {selectedLevels.length} — {currentLevel.name}
-            </p>
-            <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10">
-              <iframe
-                src={`https://www.youtube.com/embed/${videoId}`}
-                allowFullScreen
-                className="w-full h-full"
-              />
+      {showHowToPlay && (
+        <HowToPlay onClose={() => setShowHowToPlay(false)} num={mode} />
+      )}
+      {error ? (
+        <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative animate-[slideUp_1s_ease-out_0.5s_both] flex justify-center items-center flex-col gap-4">
+          <div className="text-red-500 text-center mb-4">
+            {language === "en" ? (
+              <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
+                Error: Unable to fetch levels. Please dm me on{" "}
+                <a
+                  href="https://discord.gg/H4EU4KvSkR"
+                  className="text-blue-300 underline cursor-pointer"
+                >
+                  Discord server
+                </a>{" "}
+                or{" "}
+                <a
+                  href="https://t.me/only1stumpyy"
+                  className="text-blue-300 underline cursor-pointer"
+                >
+                  Telegram
+                </a>
+              </h1>
+            ) : (
+              <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
+                Ошибка: Не удалось загрузить уровни. Пожалуйста, сообщите об
+                ошибке в{" "}
+                <a
+                  href="https://discord.gg/H4EU4KvSkR"
+                  className="text-blue-300 underline cursor-pointer"
+                >
+                  Discord сервер
+                </a>{" "}
+                или в{" "}
+                <a
+                  href="https://t.me/only1stumpyy"
+                  className="text-blue-300 underline cursor-pointer"
+                >
+                  Telegram
+                </a>
+              </h1>
+            )}
+          </div>
+          <button
+            onClick={() => router.push("/quiz")}
+            className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
+          >
+            {language === "en" ? "Go back" : "Вернуться назад"}
+          </button>
+        </div>
+      ) : (
+        <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative animate-[slideUp_1s_ease-out_0.5s_both]">
+          <button
+            onClick={() => setShowHowToPlay(true)}
+            className="text-sm text-[var(--neon-blue)] hover:underline cursor-pointer absolute top-10 right-4 font-semibold border border-[var(--neon-blue)] rounded-full px-3 py-1 transition duration-300 ease-linear hover:bg-[var(--neon-blue)] hover:text-white shadow-[0_0_10px_rgba(0,255,255,0.5)] z-10 hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] animate-[fadeIn_1s_ease-out_1s_both]"
+          >
+            i
+          </button>
+          <h1 className="text-5xl text-center mb-4 font-[Russo_One] animate-[slideUp_1s_ease-out_0.5s_both]">
+            {language === "en" ? "View levels" : "Просмотр уровней"}
+          </h1>
+          {currentLevel ? (
+            <div className="mb-8 animate-[slideUp_1s_ease-out_0.7s_both]">
+              <p className="text-center font-semibold mb-2">
+                {language === "en" ? "Level " : "Уровень "}
+                {currentIndex + 1} / {selectedLevels.length} —{" "}
+                {currentLevel.name}
+              </p>
+              <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10">
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="text-center mt-6">
+                <button
+                  onClick={handleNext}
+                  className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
+                >
+                  {currentIndex < mode - 1
+                    ? language === "en"
+                      ? "Next level"
+                      : "Следующий уровень"
+                    : language === "en"
+                    ? "Go to top"
+                    : "Перейти к топу"}
+                </button>
+              </div>
             </div>
-            <div className="text-center mt-6">
+          ) : null}
+
+          {watchedLevels.length > 0 && (
+            <div className="animate-[slideUp_1s_ease-out_1s_both]">
+              <h2 className="text-xl font-semibold text-center mb-2">
+                {language === "en" ? "Your current top" : "Твой текущий топ"}
+              </h2>
+              <p className="text-center text-sm text-gray-400 mb-4">
+                {language === "en"
+                  ? "Drag the levels. At the top - hardest."
+                  : "Перетаскивай уровни. Сверху — самый сложный."}
+              </p>
+
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={watchedLevels.map((lvl) => lvl.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {watchedLevels.map((level, index) => (
+                    <SortableLevel key={level.id} level={level} index={index} />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            </div>
+          )}
+
+          {watchedLevels.length === mode && (
+            <div className="text-center mt-8">
               <button
-                onClick={handleNext}
+                onClick={handleSubmit}
                 className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
               >
-                {currentIndex < mode - 1
-                  ? language === "en"
-                    ? "Next level"
-                    : "Следующий уровень"
-                  : language === "en"
-                  ? "Go to top"
-                  : "Перейти к топу"}
+                {language === "en" ? "Submit top" : "Отправить топ"}
               </button>
             </div>
-          </div>
-        ) : null}
-
-        {watchedLevels.length > 0 && (
-          <div className="animate-[slideUp_1s_ease-out_1s_both]">
-            <h2 className="text-xl font-semibold text-center mb-2">
-              {language === "en" ? "Your current top" : "Твой текущий топ"}
-            </h2>
-            <p className="text-center text-sm text-gray-400 mb-4">
-              {language === "en"
-                ? "Drag the levels. At the top - hardest."
-                : "Перетаскивай уровни. Сверху — самый сложный."}
-            </p>
-
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={watchedLevels.map((lvl) => lvl.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                {watchedLevels.map((level, index) => (
-                  <SortableLevel key={level.id} level={level} index={index} />
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
-        )}
-
-        {watchedLevels.length === mode && (
-          <div className="text-center mt-8">
-            <button
-              onClick={handleSubmit}
-              className="bg-linear-45 from-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_30px_rgba(0,255,255,0.3)] border-0 text-white py-6 px-12 text-xl font-bold rounded-[50px] cursor-pointer transition duration-300 ease-linear no-underline inline-block animate-[slideUp_1s_ease-out_1.5s_both] relative overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.5)] before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r  before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 hover:before:left-full"
-            >
-              {language === "en" ? "Submit top" : "Отправить топ"}
-            </button>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </>
   );
 }

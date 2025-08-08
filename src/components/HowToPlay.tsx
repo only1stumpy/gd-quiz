@@ -2,7 +2,13 @@
 import useLanguageStore from "@/store/useLanguageStore";
 import { useEffect } from "react";
 
-export default function HowToPlay({ onClose }: { onClose: () => void }) {
+export default function HowToPlay({
+  onClose,
+  num,
+}: {
+  onClose: any;
+  num: number;
+}) {
   const language = useLanguageStore((state) => state.language);
 
   useEffect(() => {
@@ -29,7 +35,7 @@ export default function HowToPlay({ onClose }: { onClose: () => void }) {
         {language === "en" ? (
           <>
             <p className="mb-2">
-              You will be shown 10 random demons from the{" "}
+              You will be shown {num} random demons from the{" "}
               <a
                 href="https://demonlist.org/"
                 className="text-blue-300 underline cursor-pointer"
