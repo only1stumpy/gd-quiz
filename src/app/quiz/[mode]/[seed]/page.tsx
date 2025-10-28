@@ -7,6 +7,7 @@ import {
   useSensor,
   useSensors,
   TouchSensor,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -21,7 +22,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import HowToPlay from "@/components/HowToPlay";
 import useQuizStore from "@/store/quizStore";
 import { usePathname } from "next/navigation";
-
+import { safeLocalStorage } from "@/functions/safeLocalStorage";
 import { useRouter } from "next/navigation";
 export default function QuizPage() {
   const router = useRouter();
@@ -29,19 +30,35 @@ export default function QuizPage() {
   const pathname = path.split("/")[2];
   const seed = path.split("/")[3];
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     async function fetchFromDB() {
-      const res = await fetch(`/api/seed/get?seed=${seed}&mode=${pathname}`);
-      const data = await res.json();
-      if (data.levels) {
-        useQuizStore.getState().setSelectedLevels(data.levels);
+      try {
+        setIsLoading(true);
+        const res = await fetch(`/api/seed/get?seed=${seed}&mode=${pathname}`);
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch quiz data");
+        }
+
+        const data = await res.json();
+
+        if (data.levels && Array.isArray(data.levels) && data.levels.length > 0) {
+          useQuizStore.getState().setSelectedLevels(data.levels);
+          setError(false);
+        } else {
+          setError(true);
+        }
+      } catch (err) {
+        console.error("Error fetching quiz:", err);
+        setError(true);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchFromDB();
-    if (useQuizStore.getState().selectedLevels.length === 0) {
-      setError(true);
-    }
   }, [seed, pathname]);
   const language = useLanguageStore((state) => state.language);
   useScrollReveal();
@@ -66,9 +83,9 @@ export default function QuizPage() {
     setCurrentIndex((prev) => prev + 1);
   };
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over.id) {
+    if (over && active.id !== over.id) {
       const oldIndex = watchedLevels.findIndex((lvl) => lvl.id === active.id);
       const newIndex = watchedLevels.findIndex((lvl) => lvl.id === over.id);
       setWatchedLevels((items) => arrayMove(items, oldIndex, newIndex));
@@ -76,7 +93,10 @@ export default function QuizPage() {
   };
 
   const handleSubmit = async () => {
-    localStorage.setItem("gdquiz_levels", JSON.stringify(watchedLevels));
+    const saved = safeLocalStorage.setItem("gdquiz_levels", watchedLevels);
+    if (!saved) {
+      console.warn("Failed to save quiz results, but continuing anyway");
+    }
     router.push(`${path}/result`);
   };
 
@@ -88,7 +108,16 @@ export default function QuizPage() {
       {showHowToPlay && (
         <HowToPlay onClose={() => setShowHowToPlay(false)} num={mode} />
       )}
-      {error ? (
+      {isLoading ? (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[var(--neon-blue)] mb-4"></div>
+            <p className="text-white text-xl">
+              {language === "en" ? "Loading quiz..." : "Загрузка квиза..."}
+            </p>
+          </div>
+        </div>
+      ) : error ? (
         <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative animate-[slideUp_1s_ease-out_0.5s_both] flex justify-center items-center flex-col gap-4">
           <div className="text-red-500 text-center mb-4">
             {language === "en" ? (

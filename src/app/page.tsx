@@ -2,6 +2,7 @@
 import useLanguageStore from "@/store/useLanguageStore";
 import { Analytics } from "@vercel/analytics/next";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import AdUnit from "@/components/AdUnit";
 import Link from "next/link";
 
 export default function Home() {
@@ -34,6 +35,15 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Ad Unit 1 - After Hero Section */}
+      <div className="max-w-[1200px] mx-auto px-4 my-8">
+        <AdUnit
+          adSlot="1234567890"
+          adFormat="auto"
+          className="scroll-reveal"
+        />
+      </div>
+
       <section className="scroll-reveal bg-(--card-bg) rounded-3xl p-6 md:p-12 my-6 md:my-12 mx-4 md:mx-8 backdrop-blur-md border-1 border-(--card-border)">
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-8 text-center">
           <div className="p-8">
@@ -62,6 +72,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Ad Unit 2 - After Stats Section */}
+      <div className="max-w-[1200px] mx-auto px-4 my-8">
+        <AdUnit
+          adSlot="0987654321"
+          adFormat="auto"
+          className="scroll-reveal"
+        />
+      </div>
 
       <section className="py-20 px-8 max-w-[1200px] mx-auto">
         <div className="grid grid-cols-[1fr] md:grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-8 mt-12">
@@ -108,6 +127,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Ad Unit 3 - Bottom of Page */}
+      <div className="max-w-[1200px] mx-auto px-4 my-8">
+        <AdUnit
+          adSlot="5555555555"
+          adFormat="auto"
+          className="scroll-reveal"
+        />
+      </div>
     </div>
   );
 }

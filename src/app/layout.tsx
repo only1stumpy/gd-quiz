@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BgWrapper from "@/components/BgWrapper";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import GoogleAdsense from "@/components/GoogleAdsense";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
@@ -36,8 +37,13 @@ export const metadata: Metadata = {
 };
 
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
+
   return (
     <html lang="en">
+      <head>
+        {adsenseId && <GoogleAdsense pId={adsenseId} />}
+      </head>
       <body
         className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >

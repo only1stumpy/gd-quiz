@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { ILevelData } from "@/types/level";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { shuffle } from "@/functions/shuffle";
 
 interface QuizState {
   selectedLevels: ILevelData[]; // выбранные уровни для игры
@@ -33,13 +34,13 @@ const useQuizStore = create<QuizState>((set, get) => ({
   },
   setEasy: () => {
     const allLevels = useAllLevelsStore.getState().allLevels;
-    const shuffled = [...allLevels].sort(() => 0.5 - Math.random());
+    const shuffled = shuffle(allLevels);
     set({ selectedLevels: shuffled.slice(0, 5) });
   },
 
   setNormal: () => {
     const allLevels = useAllLevelsStore.getState().allLevels;
-    const shuffled = [...allLevels].sort(() => 0.5 - Math.random());
+    const shuffled = shuffle(allLevels);
     set({ selectedLevels: shuffled.slice(0, 10) });
   },
 
@@ -48,7 +49,7 @@ const useQuizStore = create<QuizState>((set, get) => ({
     const range = allLevels.filter(
       (l) => l.place >= randomStart && l.place < randomStart + 100
     );
-    const shuffled = [...range].sort(() => 0.5 - Math.random());
+    const shuffled = shuffle(range);
     set({ selectedLevels: shuffled.slice(0, 10) });
   },
   setCustom: (lvlNum: number, rangeStart: number, rangeEnd: number) => {
@@ -56,7 +57,7 @@ const useQuizStore = create<QuizState>((set, get) => ({
     const range = allLevels.filter(
       (l) => l.place >= rangeStart && l.place < rangeEnd
     );
-    const shuffled = [...range].sort(() => 0.5 - Math.random());
+    const shuffled = shuffle(range);
     set({ selectedLevels: shuffled.slice(0, lvlNum) });
   },
 }));

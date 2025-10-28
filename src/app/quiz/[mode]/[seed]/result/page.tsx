@@ -5,6 +5,7 @@ import { ILevelData } from "@/types/level";
 import getVideoId from "@/functions/getVideoId";
 import useLanguageStore from "@/store/useLanguageStore";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { safeLocalStorage } from "@/functions/safeLocalStorage";
 
 export default function ResultPage() {
   const language = useLanguageStore((state) => state.language);
@@ -16,18 +17,20 @@ export default function ResultPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const stored = localStorage.getItem("gdquiz_levels");
-    if (!stored) return;
+    const stored = safeLocalStorage.getItem<ILevelData[]>("gdquiz_levels");
+    if (!stored || !Array.isArray(stored)) {
+      console.error("No valid quiz data found in localStorage");
+      return;
+    }
 
-    const parsed: ILevelData[] = JSON.parse(stored);
-    setUserTop(parsed);
+    setUserTop(stored);
 
-    const correct = [...parsed].sort((a, b) => a.place - b.place);
+    const correct = [...stored].sort((a, b) => a.place - b.place);
     setCorrectOrder(correct);
 
     let mistakeCount = 0;
 
-    parsed.forEach((level, i) => {
+    stored.forEach((level, i) => {
       const correctIndex = correct.findIndex((l) => l.id === level.id);
       if (correctIndex !== i) {
         mistakeCount++;
@@ -49,7 +52,7 @@ export default function ResultPage() {
   };
 
   const restart = () => {
-    localStorage.removeItem("gdquiz_levels");
+    safeLocalStorage.removeItem("gdquiz_levels");
     router.push("/quiz");
   };
   const numberOfLevels = userTop.length;

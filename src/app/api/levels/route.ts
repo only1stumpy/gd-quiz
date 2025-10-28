@@ -49,25 +49,64 @@ const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
   return embeddableLevels;
 };
 
+// Cache for 1 hour
+export const revalidate = 3600;
+
 export async function GET(request: Request) {
   const apiUrl = "https://api.demonlist.org/levels/classic";
 
-  const res = await fetch(apiUrl);
+  try {
+    const res = await fetch(apiUrl, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
 
-  const data = await res.json();
-  const levelsWithVideo = data.data.filter(
-    (level: { video: any }) => level.video
-  );
-  const result = await checkVideosParallel(levelsWithVideo);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch levels: ${res.status} ${res.statusText}`);
+    }
 
-  const response = NextResponse.json({
-    success: true,
-    count: result.length,
-    data: result,
-  });
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+    const data = await res.json();
 
-  return response;
+    if (!data || !Array.isArray(data.data)) {
+      throw new Error("Invalid response format from demon list API");
+    }
+
+    const levelsWithVideo = data.data.filter(
+      (level: { video: any }) => level.video
+    );
+
+    if (levelsWithVideo.length === 0) {
+      return NextResponse.json({
+        success: true,
+        count: 0,
+        data: [],
+        message: "No levels with videos found",
+      });
+    }
+
+    const result = await checkVideosParallel(levelsWithVideo);
+
+    const response = NextResponse.json({
+      success: true,
+      count: result.length,
+      data: result,
+    });
+
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+    response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=7200");
+
+    return response;
+  } catch (error) {
+    console.error("Error fetching levels:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to fetch levels",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 }
