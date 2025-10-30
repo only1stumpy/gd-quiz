@@ -51,6 +51,14 @@ export default function Footer() {
           </a>
         </p>
       )}
+      <a
+        href="/privacy"
+        className="text-blue-300 underline cursor-pointer"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Privacy Policy
+      </a>
     </footer>
   );
 }
