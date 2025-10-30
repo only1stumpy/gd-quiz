@@ -116,9 +116,8 @@ export default function ResultPage() {
               className={`${getCardColor(
                 level,
                 index
-              )} p-4 rounded-xl border border-white/10 backdrop-blur animate-[slideUp_1s_ease-out_1.${index}s_both] animate-[slideUp_1s_ease-out_1.${
-                index + 1
-              }s_both]`}
+              )} p-4 rounded-xl border border-white/10 backdrop-blur animate-[slideUp_1s_ease-out_1s_both]`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm text-gray-300">

@@ -128,8 +128,9 @@ export default function Mode() {
       );
     } else {
       const seed = await pushDB();
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://gd-quiz.vercel.app';
       navigator.clipboard.writeText(
-        `http://gd-quiz.vercel.app/quiz/friend/${seed}`
+        `${baseUrl}/quiz/friend/${seed}`
       );
       toast.success(
         language === "en"

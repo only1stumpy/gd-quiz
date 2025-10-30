@@ -41,9 +41,7 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
   return (
     <html lang="en">
-      <head>
-        {adsenseId && <GoogleAdsense pId={adsenseId} />}
-      </head>
+      <head>{adsenseId && <GoogleAdsense pId={adsenseId} />}</head>
       <body
         className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >

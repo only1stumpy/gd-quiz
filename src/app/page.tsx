@@ -35,7 +35,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Ad Unit 1 - After Hero Section */}
+      {/* Ad Unit 1 - After Hero Section 
       <div className="max-w-[1200px] mx-auto px-4 my-8">
         <AdUnit
           adSlot="1234567890"
@@ -43,8 +43,8 @@ export default function Home() {
           className="scroll-reveal"
         />
       </div>
-
-      <section className="scroll-reveal bg-(--card-bg) rounded-3xl p-6 md:p-12 my-6 md:my-12 mx-4 md:mx-8 backdrop-blur-md border-1 border-(--card-border)">
+*/}
+      <section className="scroll-reveal bg-[var(--card-bg)] rounded-3xl p-6 md:p-12 my-6 md:my-12 mx-4 md:mx-8 backdrop-blur-md border-1 border-[var(--card-border)]">
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-8 text-center">
           <div className="p-8">
             <span className="font-[orbitron] text-5xl font-black bg-linear-45 from-[var(--neon-green)] to-[var(--neon-blue)] bg-clip-text text-transparent block">
@@ -73,7 +73,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Ad Unit 2 - After Stats Section */}
+      {/* Ad Unit 2 - After Stats Section 
       <div className="max-w-[1200px] mx-auto px-4 my-8">
         <AdUnit
           adSlot="0987654321"
@@ -81,7 +81,7 @@ export default function Home() {
           className="scroll-reveal"
         />
       </div>
-
+*/}
       <section className="py-20 px-8 max-w-[1200px] mx-auto">
         <div className="grid grid-cols-[1fr] md:grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-8 mt-12">
           <div className="scroll-reveal bg-[var(--card-bg)] border-1 border-(--card-border) rounded-3xl p-12 text-center backdrop-blur-md transition duration-300 ease-linear relative overflow-hidden hover:-translate-y-2.5 hover:shadow-[0_20px_40px_rgba(0,255,255,0.2)] hover:border-cyan-400/30 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-green-400 before:scale-x-0 before:transition-transform before:duration-300 before:ease-in-out hover:before:scale-x-100">
@@ -128,14 +128,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Ad Unit 3 - Bottom of Page */}
+      {/* Ad Unit 3 - Bottom of Page 
       <div className="max-w-[1200px] mx-auto px-4 my-8">
         <AdUnit
           adSlot="5555555555"
           adFormat="auto"
           className="scroll-reveal"
         />
-      </div>
+      </div>*/}
     </div>
   );
 }
