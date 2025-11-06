@@ -42,11 +42,13 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <html lang="en">
       <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2548493071724055"
-          crossOrigin="anonymous"
-        ></script>
+        {adsenseId && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${adsenseId}`}
+            crossOrigin="anonymous"
+          ></script>
+        )}
       </head>
       <body
         className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { ILevelData } from "@/types/level";
 import getVideoId from "@/functions/getVideoId";
 import useLanguageStore from "@/store/useLanguageStore";
@@ -140,11 +141,13 @@ export default function ResultPage() {
                   : {level.place}
                 </div>
               </div>
-              <img
+              <Image
                 src={`https://img.youtube.com/vi/${getVideoId(
                   level.video
                 )}/hqdefault.jpg`}
                 alt={level.name}
+                width={480}
+                height={360}
                 className="w-full aspect-video object-cover rounded-md border border-white/10"
               />
             </li>

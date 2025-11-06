@@ -13,4 +13,7 @@ model Seed {
   seed   String @id
   mode   String
   levels Json
+
+  @@index([mode])
+  @@index([seed, mode])
 }

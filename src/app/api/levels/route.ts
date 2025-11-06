@@ -91,7 +91,12 @@ export async function GET(request: Request) {
       data: result,
     });
 
-    response.headers.set("Access-Control-Allow-Origin", "*");
+    // CORS headers - restrict in production
+    const allowedOrigin = process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_SITE_URL || "https://gd-quiz.vercel.app"
+      : "*";
+
+    response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
     response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
     response.headers.set("Access-Control-Allow-Headers", "Content-Type");
     response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=7200");

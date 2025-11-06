@@ -168,6 +168,7 @@ export default function QuizPage() {
         <div className="min-h-screen max-w-3xl mx-auto px-4 py-12 text-white relative animate-[slideUp_1s_ease-out_0.5s_both]">
           <button
             onClick={() => setShowHowToPlay(true)}
+            aria-label={language === "en" ? "Show how to play instructions" : "Показать инструкции"}
             className="text-sm text-[var(--neon-blue)] hover:underline cursor-pointer absolute top-10 right-4 font-semibold border border-[var(--neon-blue)] rounded-full px-3 py-1 transition duration-300 ease-linear hover:bg-[var(--neon-blue)] hover:text-white shadow-[0_0_10px_rgba(0,255,255,0.5)] z-10 hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] animate-[fadeIn_1s_ease-out_1s_both]"
           >
             i
@@ -185,6 +186,7 @@ export default function QuizPage() {
               <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10">
                 <iframe
                   src={`https://www.youtube.com/embed/${videoId}`}
+                  title={`${currentLevel.name} - Geometry Dash level showcase`}
                   allowFullScreen
                   className="w-full h-full"
                 />

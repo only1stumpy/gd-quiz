@@ -30,7 +30,14 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ levels: result?.levels || [] });
+    if (!result) {
+      return NextResponse.json(
+        { error: "Quiz not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ levels: result.levels });
   } catch (error) {
     console.error("DB fetch error:", error);
 
