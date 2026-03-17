@@ -3,11 +3,11 @@ import { Inter, Orbitron, Russo_One } from "next/font/google";
 import "@/assets/styles/globals.css";
 import "next-range-slider/dist/main.css";
 import "react-toastify/dist/ReactToastify.css";
-import BgWrapper from "@/components/BgWrapper";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import GoogleAdsense from "@/components/GoogleAdsense";
+import BgWrapper from "@/components/ui/BgWrapper";
+import Header from "@/components/ui/Header";
+import Footer from "@/components/ui/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import {ToastContainer} from "react-toastify";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,19 +37,9 @@ export const metadata: Metadata = {
 };
 
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
 
   return (
     <html lang="en">
-      <head>
-        {adsenseId && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${adsenseId}`}
-            crossOrigin="anonymous"
-          ></script>
-        )}
-      </head>
       <body
         className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >
@@ -58,6 +48,12 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         <Header />
         <main>{children}</main>
         <Footer />
+        <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar
+            theme="dark"
+        />
       </body>
     </html>
   );

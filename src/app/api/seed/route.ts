@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { z } from "zod";
+import {Prisma} from "@prisma/client";
 
 const levelSchema = z.object({
   id: z.number(),
   name: z.string(),
-  place: z.number(),
-  video: z.string().url(),
+  placement: z.number(),
+  verification_url: z.string().url(),
 });
 
 const seedRequestSchema = z.object({
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
       data: {
         seed: validatedData.seed,
         mode: validatedData.mode,
-        levels: validatedData.levels,
+        levels: validatedData.levels as Prisma.InputJsonValue
       },
     });
 

@@ -1,0 +1,90 @@
+{
+  "main": {
+    "discord": "Discord server",
+    "or": " or "
+  },
+  "footer":{
+    "created": "Created with ❤\uFE0F by",
+    "bugs": "If you find any bugs, dm me on "
+  },
+  "HowToPlay": {
+    "title": "How to Play",
+    "shown": "You will be shown ",
+    "demonlist": " random demons from the ",
+    "task": ". Your task is to rank them from hardest (top) to easiest (bottom).",
+    "video": "Watch the video of each level, then place it in your top using drag-and-drop.",
+    "tuned": "Stay tuned and join our "
+  },
+  "home": {
+    "desc": "Think you know Geometry Dash? Test your skills by ranking the hardest levels from most impossible to easiest. Can you beat the ultimate difficulty challenge?",
+    "button": "Start Challenge",
+    "hardest": "Hardest Levels",
+    "levels": "Levels Per Quiz",
+    "att": "Attempts",
+    "legendary": "Legendary Levels",
+    "brutal": "Face the most brutal and legendary levels from the Geometry Dash demon list. From Amethyst to The Golden to Black Flag - can you rank them correctly?",
+    "epic": "Epic Showcases",
+    "vid": "Watch mind-blowing YouTube videos of the most skilled players conquering impossible levels. See the raw difficulty in action before making your choice.",
+    "ultimate": "Ultimate Test",
+    "mastery": "Prove your mastery by comparing your rankings with the official difficulty list. Only true GD legends can achieve perfect scores!"
+  },
+  "quizPage": {
+    "title": "Choose the difficulty",
+    "lvlNum": "Number of levels",
+    "easyRange": "Range: all top",
+    "easyButton": "Easy",
+    "normalRange": "Range: all top",
+    "normalButton": "Normal",
+    "hardRange": "Range: random 100 range (like top 700-800 or 220-320)",
+    "hardButton": "Hard",
+    "customRange": "Range: custom",
+    "customButton": "Custom",
+    "friendTitle": "Create your own game!",
+    "friendDesc": "You can create your own game with any levels you want. You can choose number of levels, choose any level, copy link and send your friends!",
+    "friendButton": "Friend"
+  },
+  "mode": {
+    "error": "Error: Unable to fetch levels. Please dm me on ",
+    "backButton": "Go back",
+    "range": "Range",
+    "playButton": "Play",
+    "search": "Search levels...",
+    "selected": "selected",
+    "copyButton": "Copy link",
+    "noMode": "There's no this Mode"
+  },
+  "quiz": {
+    "loading": "Loading quiz...",
+    "instructions": "Show how to play instructions",
+    "title": "View levels",
+    "level": "Level ",
+    "next": "Next level",
+    "top": "Go to top",
+    "topTitle": "Your current top",
+    "topInstructions": "Drag the levels. At the top - hardest.",
+    "submit": "Submit top"
+  },
+  "results": {
+    "title": "Results",
+    "thanks": "Thank you for playing! Join our ",
+    "desc": "Here are your results, green is correct, red is wrong",
+    "errors": "Sum of errors",
+    "place": "in your top",
+    "relativePlace": "Real place among these ",
+    "realPlace": "Placement in global demon list",
+    "playAgain": "Play again"
+  },
+  "video":{
+    "hide": "Hide video",
+    "show": "Show video"
+  },
+  "errors": {
+    "fetchLevels": "Failed to fetch levels. Please try again later.",
+    "seed": "Failed to seed levels. Please try again later.",
+    "few": "Too few levels selected. Minimum is 3"
+  },
+  "success": {
+    "fetchLevels": "Levels fetched successfully",
+    "copy": "Link copied to clipboard"
+  }
+}

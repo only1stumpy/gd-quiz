@@ -1,0 +1,42 @@
+"use client";
+import Link from "next/link";
+import {useLanguageChange} from "@/hooks/useLanguageChange";
+
+
+export default function Header() {
+  const { language, setRussianLanguage, setEnglishLanguage } = useLanguageChange()
+
+
+  return (
+    <header className="relative bg-transparent py-4 z-100">
+      <div className="max-w-300 mx-auto px-8 flex justify-between items-center flex-col md:flex-row gap-1">
+        <div className="font-[orbitron] text-2xl font-black bg-linear-45 from-(--neon-blue) to-(--neon-purple) bg-clip-text text-transparent">
+          <Link href="/public">GDQuiz</Link>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="opacity-70 mr-1">Language:</span>
+          <button
+            className={`bg-(--card-bg) text-white py-2 px-4 rounded-3xl cursor-pointer transition duration-300 ease-linear font-medium hover:bg-gray-700 hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] backdrop-blur-md ${
+              language === "en"
+                ? "bg-linear-45 from-(--neon-blue) to-(--neon-purple) shadow-[0_0_30px_rgba(0,255,255,0.5)]"
+                : ""
+            }`}
+            onClick={setEnglishLanguage}
+          >
+            EN
+          </button>
+          <button
+            className={`bg-(--card-bg) text-white py-2 px-4 rounded-3xl cursor-pointer transition duration-300 ease-linear font-medium hover:bg-gray-700 hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] backdrop-blur-md ${
+              language === "ru"
+                ? "bg-linear-45 from-(--neon-blue) to-(--neon-purple) shadow-[0_0_30px_rgba(0,255,255,0.5)]"
+                : ""
+            }`}
+            onClick={setRussianLanguage}
+          >
+            RU
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}

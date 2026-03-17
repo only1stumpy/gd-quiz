@@ -1,26 +1,12 @@
-export interface ILevelData {
+export type LevelData = {
   id: number;
-  level_id: number;
-  verifier_id: number;
-  place: number;
-  score: number;
-  minimal_percent: number;
-  length: number;
-  objects: number;
+  ingame_id: number;
+  placement: number;
   name: string;
-  description: string;
-  verifier: string;
-  creator: string;
+  points: number;
+  list_percent: number;
+  length: number;
   holder: string;
-  video: string;
-  song: string;
-  created_in: string;
-  password: string;
-  need_new_label: boolean;
-}
-
-export interface ILevel {
-  success: boolean;
-  message: string;
-  data: ILevelData[];
+  verification_url: string;
+  date_created: string;
 }

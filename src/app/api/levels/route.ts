@@ -1,5 +1,5 @@
 import getVideoId from "@/functions/getVideoId";
-import { ILevelData } from "@/types/level";
+import { LevelData } from "@/types/level";
 import { NextResponse } from "next/server";
 const embedCache = new Map<string, boolean>();
 
@@ -29,14 +29,14 @@ const checkEmbedAvailability = async (videoUrl: string) => {
   }
 };
 
-const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
-  const embeddableLevels: ILevelData[] = [];
+const checkVideosParallel = async (levels: LevelData[], maxParallel = 5) => {
+  const embeddableLevels: LevelData[] = [];
   const levelsToCheck = [...levels];
 
   while (levelsToCheck.length > 0) {
     const batch = levelsToCheck.splice(0, maxParallel);
     const results = await Promise.all(
-      batch.map((level) => checkEmbedAvailability(level.video))
+      batch.map((level) => checkEmbedAvailability(level.verification_url))
     );
 
     results.forEach((isEmbeddable, index) => {
@@ -52,8 +52,8 @@ const checkVideosParallel = async (levels: ILevelData[], maxParallel = 5) => {
 // Cache for 1 hour
 export const revalidate = 3600;
 
-export async function GET(request: Request) {
-  const apiUrl = "https://api.demonlist.org/levels/classic";
+export async function GET() {
+  const apiUrl = "https://api.demonlist.org/level/classic/list";
 
   try {
     const res = await fetch(apiUrl, {
@@ -66,12 +66,12 @@ export async function GET(request: Request) {
 
     const data = await res.json();
 
-    if (!data || !Array.isArray(data.data)) {
+    if (!data.data?.levels || !Array.isArray(data.data.levels)) {
       throw new Error("Invalid response format from demon list API");
     }
 
-    const levelsWithVideo = data.data.filter(
-      (level: { video: any }) => level.video
+    const levelsWithVideo = data.data.levels.filter(
+        (level: { verification_url: string }) => level.verification_url
     );
 
     if (levelsWithVideo.length === 0) {
