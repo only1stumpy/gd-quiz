@@ -44,10 +44,9 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >
       <Script
-          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2548493071724055"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
       />
       <SpeedInsights />
       <BgWrapper />
