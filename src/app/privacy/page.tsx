@@ -49,7 +49,7 @@ export default function PrivacyPage() {
               },
               {
                 term: "Website",
-                text: "refers to GDQuiz, accessible from https://gd-quiz.vercel.app/",
+                text: "refers to GDQuiz, accessible from https://gdquiz.com/",
               },
               {
                 term: "You",
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
               },
               {
                 term: "Веб-сайт",
-                text: "относится к GDQuiz, доступному по адресу https://gd-quiz.vercel.app/",
+                text: "относится к GDQuiz, доступному по адресу https://gdquiz.com/",
               },
               {
                 term: "Вы",
