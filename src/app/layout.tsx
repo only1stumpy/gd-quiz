@@ -35,6 +35,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  other: {
+    "google-adsense-account": "ca-pub-2548493071724055",
+  },
 };
 
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
@@ -43,11 +46,6 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       <body
           className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >
-      <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2548493071724055"
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
-      />
       <SpeedInsights />
       <BgWrapper />
       <Header />
