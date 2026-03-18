@@ -1,3 +1,16 @@
 {
-  "installCommand": "bun install"
+  "installCommand": "bun install",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "gd-quiz.vercel.app"
+        }
+      ],
+      "destination": "https://gdquiz.com/$1",
+      "permanent": true
+    }
+  ]
 }
