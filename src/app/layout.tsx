@@ -8,7 +8,6 @@ import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ToastContainer } from "react-toastify";
-import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,6 +37,9 @@ export const metadata: Metadata = {
   other: {
     "google-adsense-account": "ca-pub-2548493071724055",
   },
+    alternates: {
+        canonical: 'https://www.gdquiz.com',
+    },
 };
 
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
