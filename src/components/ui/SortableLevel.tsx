@@ -49,6 +49,7 @@ export default function SortableLevel(props: Props) {
         {...attributes}
         {...listeners}
         data-dnd-kit-drag-handle
+        aria-label="Drag to reorder"
         style={{
           touchAction: "none",
         }}
@@ -62,6 +63,7 @@ export default function SortableLevel(props: Props) {
       <p className="font-semibold mb-2">{props.level.name}</p>
 
       <button
+        type="button"
         onClick={toggle}
         className="flex items-center gap-1 text-sm text-(--neon-blue) mb-3 cursor-pointer select-none"
       >
@@ -83,8 +85,9 @@ export default function SortableLevel(props: Props) {
             <iframe
               src={`https://www.youtube.com/embed/${videoId}`}
               allowFullScreen
+              loading="lazy"
               className="w-full h-full"
-              title={props.level.name}
+              title={`${props.level.name} - Geometry Dash level showcase video`}
             />
           </div>
         )}

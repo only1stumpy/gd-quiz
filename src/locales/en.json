@@ -81,7 +81,11 @@
   "errors": {
     "fetchLevels": "Failed to fetch levels. Please try again later.",
     "seed": "Failed to seed levels. Please try again later.",
-    "few": "Too few levels selected. Minimum is 3"
+    "few": "Too few levels selected. Minimum is 3",
+    "title": "Something went wrong",
+    "description": "An error occurred. Try refreshing the page or return to home.",
+    "retry": "Try again",
+    "home": "Go home"
   },
   "success": {
     "fetchLevels": "Levels fetched successfully",

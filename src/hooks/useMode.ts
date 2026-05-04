@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {useParams, useRouter} from "next/navigation";
 import { nanoid } from "nanoid";
 import useQuizStore, { useAllLevelsStore } from "@/store/quizStore"
@@ -18,37 +18,31 @@ export function useMode() {
     const [pos, setPos] = useState(0);
     const [selectedLevels, setSelectedLevels] = useState<LevelData[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredLevels, setFilteredLevels] = useState<LevelData[]>([]);
     const {mode} = useParams<{mode:string}>();
     const [error, setError] = useState(false);
+    const [isCreatingSeed, setIsCreatingSeed] = useState(false);
+
+    const allLevels = useAllLevelsStore((state) => state.allLevels);
 
     useEffect(() => {
-        const all = useAllLevelsStore.getState().allLevels;
-        if (all.length === 0) {
+        if (allLevels.length === 0) {
             setError(true);
             return;
         }
-        setPos(all.length);
-        setHigh(all.length);
-        setFilteredLevels(all);
-    }, []);
+        setPos(allLevels.length);
+        setHigh(allLevels.length);
+    }, [allLevels.length]);
 
-    useEffect(() => {
-        const allLevels = useAllLevelsStore.getState().allLevels;
+    const filteredLevels = useMemo(() => {
         if (searchTerm.trim() === "") {
-            setFilteredLevels(allLevels);
-        } else {
-            const results = allLevels.filter(
-                (level) =>
-                    level.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    level.holder.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setFilteredLevels(results);
+            return allLevels;
         }
-        if (useAllLevelsStore.getState().allLevels.length === 0) {
-            setError(true);
-        }
-    }, [searchTerm]);
+        return allLevels.filter(
+            (level) =>
+                level.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                level.holder?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [allLevels, searchTerm]);
 
     const handleLevelSelect = (level: LevelData) => {
         if (selectedLevels.some((l) => l.id === level.id)) {
@@ -58,38 +52,90 @@ export function useMode() {
         }
     };
 
+    const createSeedWithRetry = async (levels: LevelData[], maxRetries = 3): Promise<string> => {
+        for (let i = 0; i < maxRetries; i++) {
+            const seed = nanoid(10);
+            try {
+                await API.seed(seed, mode, levels);
+                return seed;
+            } catch (err) {
+                if (err instanceof Error && err.message.includes("collision") && i < maxRetries - 1) {
+                    continue; // Retry with new seed
+                }
+                throw err; // Give up or different error
+            }
+        }
+        throw new Error("Failed to create seed after retries");
+    };
+
     const handleStart = async () => {
-        useQuizStore.getState().setDifficulty("custom",{lvlNum: count, rangeStart: low, rangeEnd: high});
-        const seed = nanoid(6);
-        await API.seed(seed,mode,useQuizStore.getState().selectedLevels);
-        router.push(`/quiz/${mode}/${seed}`);
+        if (isCreatingSeed) return;
+        setIsCreatingSeed(true);
+
+        try {
+            // Validate level count
+            if (count < 1 || count > 100) {
+                notify.error("validation", "Level count must be between 1 and 100");
+                return;
+            }
+
+            // Validate range
+            if (low < 1 || high > pos || low >= high) {
+                notify.error("validation", "Invalid range selected");
+                return;
+            }
+
+            // Validate that range is large enough for requested count
+            if (high - low + 1 < count) {
+                notify.error("validation", `Range too small: need at least ${count} levels`);
+                return;
+            }
+
+            useQuizStore.getState().setDifficulty("custom",{lvlNum: count, rangeStart: low, rangeEnd: high});
+            const seed = await createSeedWithRetry(useQuizStore.getState().selectedLevels);
+            router.push(`/quiz/${mode}/${seed}`);
+        } finally {
+            setIsCreatingSeed(false);
+        }
     };
 
     const handlePlay = async () => {
-        if (selectedLevels.length < 3) {
-            notify.error("few", "You must select at least 3 levels");
-        } else {
-            const seed = await createSeed();
-            router.push(`/quiz/${mode}/${seed}`);
+        if (isCreatingSeed) return;
+        setIsCreatingSeed(true);
+
+        try {
+            if (selectedLevels.length < 3) {
+                notify.error("few", "You must select at least 3 levels");
+            } else {
+                const seed = await createSeedWithRetry(shuffle(selectedLevels));
+                router.push(`/quiz/${mode}/${seed}`);
+            }
+        } finally {
+            setIsCreatingSeed(false);
         }
     };
 
     const createSeed = async () => {
-        const seed = nanoid(6);
-        await API.seed(seed,mode,shuffle(selectedLevels));
-        return seed;
+        return await createSeedWithRetry(shuffle(selectedLevels));
     };
 
     const handleCopy = async () => {
-        if (selectedLevels.length < 3) {
-            notify.error("few", "You must select at least 3 levels");
-        } else {
-            const seed = await createSeed();
-            const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://gd-quiz.vercel.app';
-            navigator.clipboard.writeText(
-                `${baseUrl}/quiz/friend/${seed}`
-            );
-            notify.success("copy");
+        if (isCreatingSeed) return;
+        setIsCreatingSeed(true);
+
+        try {
+            if (selectedLevels.length < 3) {
+                notify.error("few", "You must select at least 3 levels");
+            } else {
+                const seed = await createSeed();
+                const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://gd-quiz.vercel.app';
+                navigator.clipboard.writeText(
+                    `${baseUrl}/quiz/friend/${seed}`
+                );
+                notify.success("copy");
+            }
+        } finally {
+            setIsCreatingSeed(false);
         }
     };
 

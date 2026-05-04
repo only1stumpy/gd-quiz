@@ -1,6 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "../node_modules/.prisma/client"
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -10,10 +10,12 @@ datasource db {
 }
 
 model Seed {
-  seed   String @id
-  mode   String
-  levels Json
+  seed      String   @id
+  mode      String
+  levels    Json
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 
-  @@index([mode])
   @@index([seed, mode])
+  @@index([expiresAt])
 }

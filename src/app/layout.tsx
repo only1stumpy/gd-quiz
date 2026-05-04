@@ -8,6 +8,7 @@ import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ToastContainer } from "react-toastify";
+import HtmlWrapper from "@/components/ui/HtmlWrapper";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,9 +43,15 @@ export const metadata: Metadata = {
     },
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
-      <html lang="en">
+      <HtmlWrapper>
       <body
           className={`${inter.variable} ${orbitron.variable} ${russo.variable} antialiased`}
       >
@@ -60,7 +67,7 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           theme="dark"
       />
       </body>
-      </html>
+      </HtmlWrapper>
   );
 };
 

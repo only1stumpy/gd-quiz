@@ -37,12 +37,13 @@ export function useQuiz() {
     );
     useEffect(() => {
         const controller = new AbortController();
+        let isActive = true;
 
         async function fetchFromDB() {
             try {
                 setIsLoading(true);
                 const data = await API.getSeed(seed, mode, controller.signal);
-                if (!controller.signal.aborted) {
+                if (isActive && !controller.signal.aborted) {
                     if (data.levels?.length > 0) {
                         useQuizStore.getState().setSelectedLevels(data.levels);
                     } else {
@@ -50,14 +51,20 @@ export function useQuiz() {
                     }
                 }
             } catch (err) {
-                if (!controller.signal.aborted) {setError(true); console.error(err);}
+                if (isActive && !controller.signal.aborted) {
+                    setError(true);
+                    console.error(err);
+                }
             } finally {
-                if (!controller.signal.aborted) setIsLoading(false);
+                if (isActive) setIsLoading(false);
             }
         }
 
         fetchFromDB();
-        return () => controller.abort();
+        return () => {
+            isActive = false;
+            controller.abort();
+        };
     }, [seed, mode]);
 
     const handleNext = () => {

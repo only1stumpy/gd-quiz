@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { z } from "zod";
+import { applyRateLimit, rateLimiters } from "@/lib/ratelimit";
 
 const queryParamsSchema = z.object({
   seed: z.string().min(1).max(100),
@@ -8,6 +9,12 @@ const queryParamsSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResponse = await applyRateLimit(req, rateLimiters.seedGet);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const seed = searchParams.get("seed");

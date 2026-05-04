@@ -30,6 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# lock files
+package-lock.json
+
 # env files (can opt-in for committing if needed)
 .env*
 .env
@@ -49,3 +52,11 @@ nul
 /prisma
 
 .idea
+
+CLAUDE.md
+
+docs
+
+.agents
+
+skills-lock.json

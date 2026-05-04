@@ -1,7 +1,15 @@
 import getVideoId from "@/functions/getVideoId";
 import { LevelData } from "@/types/level";
-import { NextResponse } from "next/server";
-const embedCache = new Map<string, boolean>();
+import { NextRequest, NextResponse } from "next/server";
+import { LRUCache } from "lru-cache";
+import { applyRateLimit, rateLimiters } from "@/lib/ratelimit";
+
+const embedCache = new LRUCache<string, boolean>({
+  max: 500,
+  ttl: 1000 * 60 * 60, // 1 hour
+  updateAgeOnGet: true,
+  allowStale: false,
+});
 
 const checkEmbedAvailability = async (videoUrl: string) => {
   const videoId = getVideoId(videoUrl);
@@ -52,7 +60,13 @@ const checkVideosParallel = async (levels: LevelData[], maxParallel = 5) => {
 // Cache for 1 hour
 export const revalidate = 3600;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResponse = await applyRateLimit(req, rateLimiters.levels);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const apiUrl = "https://api.demonlist.org/level/classic/list";
 
   try {
@@ -93,8 +107,8 @@ export async function GET() {
 
     // CORS headers - restrict in production
     const allowedOrigin = process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_SITE_URL || "https://gd-quiz.vercel.app"
-      : "*";
+      ? process.env.NEXT_PUBLIC_SITE_URL || "https://gdquiz.com"
+      : "http://localhost:3000";
 
     response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
     response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");

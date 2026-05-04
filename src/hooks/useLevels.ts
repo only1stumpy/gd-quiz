@@ -51,11 +51,27 @@ export function useLevels(setIsLoading: (value: (((prevState: boolean) => boolea
                 notify.error("fetchLevels", "No levels loaded");
                 return;
             }
-            const seed = nanoid(6);
+
             let randomStart = undefined;
             if (mode === "hard") randomStart = Math.floor(Math.random() * (allLevels.length - 100));
             useQuizStore.getState().setDifficulty(mode, { randomStart });
-            await API.seed(seed, mode, useQuizStore.getState().selectedLevels);
+
+            // Retry logic for seed collision
+            const maxRetries = 3;
+            let seed = "";
+            for (let i = 0; i < maxRetries; i++) {
+                seed = nanoid(10);
+                try {
+                    await API.seed(seed, mode, useQuizStore.getState().selectedLevels);
+                    break; // Success, exit retry loop
+                } catch (err) {
+                    if (err instanceof Error && err.message.includes("collision") && i < maxRetries - 1) {
+                        continue; // Retry with new seed
+                    }
+                    throw err; // Give up or different error
+                }
+            }
+
             router.push(`/quiz/${mode}/${seed}`);
         } catch (err: unknown) {
             if (err instanceof Error) {

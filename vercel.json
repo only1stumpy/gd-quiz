@@ -12,5 +12,11 @@
       "destination": "https://gdquiz.com/$1",
       "permanent": true
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/cleanup",
+      "schedule": "0 2 * * *"
+    }
   ]
 }
